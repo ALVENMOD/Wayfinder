@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wayfinder Match</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#252525;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;}
+  @keyframes wd{0%,80%,100%{opacity:.2}40%{opacity:1}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef } = React;
+
+const C = { bg:"#252525",card:"#2E2E2E",input:"#1E1E1E",mint:"#89E2C0",blue:"#1A31F1",purple:"#672ACA",text:"#F0F0F0",muted:"#888888",border:"#3A3A3A",warn:"#F1C21A",danger:"#F14A1A" };
+const F = `-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif`;
+
+const ECV = `Erkki Alvenmod - EMEA Operations & Field Services Executive
+
+SUMMARY
+Operations and field services executive with 30+ years of international experience transforming service delivery organizations across EMEA and globally. Consistent track record of driving structural change and continuous improvement, reducing costs, and lifting service performance in complex multi-country environments. Known for combining operational rigor with commercial thinking, mentoring operational leaders, and going beyond the traditional ops remit. Six Sigma Black Belt. Current EMEA Field Services CSAT 9.5/10.
+
+EXPERIENCE
+
+Director of Field Services, EMEA - Verifone Sweden AB (08/2020 - Present)
+Dual mandate: EMEA Field Services + Nordic/Baltic Operations, 2021-2024
+- Sustained EMEA Field Services KPIs above target - First Pass Yield consistently above 90%, on-site productivity above target
+- Designed and executed a Nordic Consolidation Program; consolidated Scandinavian deployment, warehousing, advanced swaps, and reverse logistics into a single Swedish hub - zero delivery delays; combined savings ~$480k
+- Architected and led pan-European Field Services expansion across Nordics, DACH, Benelux and UK; established Denmark and Finland as fully operational reference markets
+- Developed and positioned a projected ~$19M Field Services revenue opportunity across Europe through full commercial, legal, and operational readiness across multiple markets
+- Built full commercial infrastructure for Field Services expansion - customer T&Cs, pricing frameworks, business case analysis, go-to-market readiness across Legal, Sales, and Finance
+- Led pan-EMEA Salesforce Lightning rollout as single operational backbone for Field Services across 11 priority countries
+- Conceived and authored full product specification for a web-based Operational Services Availability and Quoting Tool - enabling real-time pricing and customer-facing quotes at point of sale
+- Initiated org-wide AI initiative across Operational Services - AI operations playbook and quantified opportunity map for leadership
+- Shaped Portugal Field Services into recognized EMEA best-practice model - 20% reduction in operating costs (~$60k annually), CSAT average 9.8/10; maintained stable service delivery including under active conflict conditions in Israel
+- Established EMEA KPI framework from scratch - lifted average SLA attainment from ~85% to sustained above 95%
+- Accountable for EMEA Field Services operational budget of $2.1M (FY2026)
+- During dual mandate (2021-2024): managed 6 country Operations Managers and ~106 employees across Nordic/Baltic region; current scope covers ~50 in-house staff plus outsourced 3rd party field service providers
+
+Director of Operations & Service Delivery, Nordics/Baltics - Verifone Sweden AB (10/2017 - 08/2020)
+- Member of Nordic/Baltic management team and EMEA Operations leadership team; full accountability for KPI performance, COGS, and revenue growth planning
+- Restructured complex fragmented multi-country operation: cut swap and repair turnaround from 35 to under 20 days, cut supplier base by 70% in 6 months, reduced stock-on-hand by 50% in year one while improving service levels
+- Introduced Lean, Value Stream Mapping, QMS, and continuous improvement framework across 6 countries; passed PCI PIN audits 2019; transferred CA Room operations from Italy to Stockholm
+- Established cross-country operational collaboration infrastructure across 6 countries and 106 employees
+
+Director of International Operations - Purcell Systems AB (08/2009 - 04/2017)
+- Directed international operations across manufacturing in Sweden and Poland, contract manufacturers in Asia, and 3PL operations - consistent Excellent customer satisfaction across all measured customers 2010-2017
+- Headed operational supply chain for $1.2M telecom infrastructure rollout in Italy (2013-2015) - battery backup systems and outdoor enclosures delivered on time and to specification
+- Cut inbound supply lead-time from 15 weeks to 9 weeks through supplier rationalization and logistics redesign; rebuilt QMS to ISO 9001:2015
+
+Director of Supply Chain Management - Northstar SiteTel AB (04/2007 - 06/2009)
+- Established and launched global distribution and production network across Dubai, Singapore, and the US - $5.5M annual cost savings, supply lead-time cut from 40 to 5 days, CO2 reduction of 11,000 tons annually
+- Turned around On Time Delivery from 70% to sustained 98%+ in under 7 months through strategic sourcing, 3PL implementation, and process redesign
+
+Supplier Development Manager - Ericsson AB (05/2003 - 01/2007)
+- Part of Strategic Sourcing management team; developed and owned Ericsson global models for VMI, Supplier Capacity Management, Early Warning Process, and Escalation Model
+- Owned supplier strategies, capacity and flexibility planning, and supply chain KPI frameworks across global supplier base
+
+Operations Manager - Ericsson Communications, Chongqing, China (02/2000 - 04/2003)
+- Launched Ericsson Joint Venture manufacturing and sourcing facility in Chongqing - 3,000 sqm operation delivered ahead of schedule and under budget
+- Achieved 35% SKU localization within 6 months, ~$1.73M annual cost savings; managed team of 26 across quality, supply chain, warehousing, logistics, and production
+
+Technical Manager - Ericsson Microwave Systems AB (05/1992 - 02/2000)
+- Managed team of 20 production engineers across production, product and process development
+- Generated over $1M annual savings through sustained Six Sigma-led cost reduction program; championed Lean, ISO 9001, and ISO 14001 across manufacturing operations
+
+SKILLS
+Lean | Six Sigma Black Belt | DMAIC | Value Stream Mapping | ISO 9001 / QMS | Process Improvement
+Microsoft 365 | Salesforce Lightning | Tableau | SAP | Oracle | Visma
+Claude AI | ChatGPT - daily operational use
+Swedish (Native) | English (Near-Native) | Chinese (Basic)
+
+EDUCATION
+2003 - Chinese Language, Chongqing University
+1998 - Six Sigma Black Belt, ABB Zurich
+1989-1992 - BSc Electronics, Hogskolan i Boras
+1987-1989 - Technical Upper Secondary Diploma, Sven Eriksonsgymnasiet`;
+
+const ECL_EN = `Dear Hiring Team,
+
+Are you looking for a senior operations leader who combines 30 years of hands-on international experience with a genuine track record of transforming service delivery organizations, building commercial frameworks, and driving measurable results across EMEA and beyond?
+
+I have spent my career doing exactly that - most recently as Director of Field Services, EMEA at Verifone, where I have led pan-European operational transformation, built a $19M Field Services revenue platform from the ground up, managed a $2.1M operational budget, and driven service quality to a sustained regional CSAT of 9.5/10.
+
+I have led programs that go well beyond the traditional operations remit - into commercial, legal, and go-to-market territory - and I have consistently delivered in complex, multi-country environments where structure, accountability, and continuous improvement are non-negotiable.
+
+My leadership style is direct, structured, and people focused. I take pride in building teams that take ownership, and I have mentored and developed operational leaders into more senior roles throughout my career. I bring a Six Sigma Black Belt discipline to everything I do, and I am an active practitioner of AI-assisted operations - currently sponsoring an org-wide AI initiative and integrating these tools into daily leadership practice.
+
+I am now looking for my next senior leadership challenge - a Director or VP-level role where I can apply the full breadth of my experience to build, transform, or scale an operations or field services organization.
+
+Sincerely,
+Erkki Alvenmod`;
+
+const ECL_SV = `Hej,
+
+Soker ni en senior operativ ledare med 30 ars praktisk internationell erfarenhet och ett dokumenterat spar av att transformera serviceorganisationer, bygga kommersiella strukturer och leverera matbara resultat inom EMEA och globalt?
+
+Det ar precis vad jag har agnat min karriar at - senast som Director of Field Services, EMEA pa Verifone, dar jag har lett pan-europeisk operativ transformation, byggt en Field Services-intaktsplattform pa 19 MUSD fran grunden, ansvarat for en operativ budget pa 2,1 MUSD och drivit servicekvaliteten till ett stabilt regionalt CSAT pa 9,5/10.
+
+Jag har lett program som stracker sig langt utanfor det traditionella operativa ansvarsomradet - in i kommersiella, juridiska och go-to-market-fragor - och jag har konsekvent levererat i komplexa flerlandsmiljoer dar struktur, ansvarsskyldighet och standiga forbattringar ar icke-forhandlingsbara.
+
+Mitt ledarskap ar direkt, strukturerat och manniskofokuserat. Jag tar stolthet i att bygga team som tar agarskap, och jag har under hela min karriar coacht och utvecklat operativa ledare till mer seniora roller. Jag tillamplar Six Sigma Black Belt-disciplin i allt jag gor, och jag ar en aktiv utovare av AI-stodda arbetsfloden.
+
+Jag soker nu min nasta seniora ledarskapsutmaning - en roll pa Director- eller VP-niva dar jag kan tillampla hela bredden av min erfarenhet for att bygga, transformera eller skala en operations- eller field services-organisation.
+
+Med vanliga halsningar,
+Erkki Alvenmod`;
+
+const RCV = `Robin Alvenmod - Grafisk Design & Administration
+PROFIL: Noggrann med gymnasieutbildning i grafisk design och erfarenhet fran administrativa miljoer. Soker deltid 50%.
+KOMPETENSER: Adobe Photoshop, InDesign, Excel, Google Docs.
+ERFARENHET: Administrator Forebygg Kista 2024-2026. Praktikant POD STHLM 2023. Lager Verifone 2022.
+UTBILDNING: Grafisk Design LBS 2019-2022. Svenska modersmal, Engelska flytande.`;
+
+const RCL_SV = `Hej,
+Jag ar noggrann med gymnasieutbildning i grafisk design och erfarenhet fran administrativa miljoer. Soker deltid 50%.
+Verktyg: Photoshop, InDesign, Excel. Jag foljer igenom pa varje uppgift.
+Med vanlig halsning, Robin Alvenmod`;
+
+const ESV = `Erkki Alvenmod - EMEA Operations & Field Services Executive
+
+SAMMANFATTNING
+Operativ chef och field services-ledare med 30+ ars internationell erfarenhet av att transformera serviceorganisationer inom EMEA och globalt - fran vandningar i enskilda marknader till pan-europeisk expansion. Dokumenterat spar av att driva strukturella forandringar, standiga forbattringar, reducera kostnader och hoja serviceprestanda i komplexa flerlandsmiljoer. Kand for att kombinera operativ skarpa med kommersiellt tankande, mentorskap av operativa ledare och formagan att verka utanfor det traditionella operativa ansvarsomradet. Six Sigma Black Belt. Aktuellt CSAT for EMEA Field Services: 9,5/10.
+
+YRKESERFARENHET
+
+Director of Field Services, EMEA - Verifone Sweden AB (08/2020 - Nu)
+Dubbelt mandat: EMEA Field Services + Nordic/Baltic Operations, 2021-2024
+- Upprattholl EMEA Field Services KPI:er over malniva under flera ar av organisatorisk omstrukturering
+- Designade och genomforde ett nordiskt konsolideringsprogram; sammanlagda besparingar ~480 kUSD
+- Skapade och ledde pan-europeisk expansion av Field Services inom Norden, DACH, Benelux och Storbritannien
+- Utvecklade en uppskattad intaktsmojlighet inom Field Service pa ~19 MUSD inom EMEA
+- Byggde upp hela den kommersiella infrastrukturen for Field Services-expansion
+- Ledde pan-europeisk utrullning av Salesforce Lightning i 11 prioriterade lander
+- Initierade organisationsovergripande AI-initiativ inom Operational Services
+- Etablerade EMEA KPI-ramverk fran grunden - lyfte SLA-uppfyllnad fran ~85% till over 95%
+- Ansvarig for EMEA Field Services operativa budget pa 2,1 MUSD (FY2026)
+
+Director of Operations & Service Delivery, Nordics/Baltics - Verifone Sweden AB (10/2017 - 08/2020)
+- Omstrukturerade komplex flerlandsorganisation; kortade handlaggningstid fran 35 till under 20 dagar
+- Implementerade Lean, Value Stream Mapping, QMS i 6 lander
+
+Director of International Operations - Purcell Systems AB (08/2009 - 04/2017)
+- Drev internationell verksamhet; konsekvent Utmarkt i kundnojdhet 2010-2017
+
+Director of Supply Chain Management - Northstar SiteTel AB (04/2007 - 06/2009)
+- Etablerade globalt distributionsnatverk; 5,5 MUSD arliga besparingar
+
+Supplier Development Manager - Ericsson AB (05/2003 - 01/2007)
+Operations Manager - Ericsson Communications, Chongqing (02/2000 - 04/2003)
+Technical Manager - Ericsson Microwave Systems AB (05/1992 - 02/2000)
+
+KOMPETENSER
+Lean | Six Sigma Black Belt | DMAIC | Value Stream Mapping | ISO 9001
+Microsoft 365 | Salesforce Lightning | Tableau | SAP | Oracle | Visma
+Svenska (Modersmal) | Engelska (Nara modersmalsniva) | Kinesiska (Grundlaggande)`;
+
+const USERS = {
+  erkki:{ name:"Erkki", cv:ECV, svCV:ESV, enCL:ECL_EN, svCL:ECL_SV },
+  robin:{ name:"Robin", cv:RCV, svCV:RCV, enCL:"", svCL:RCL_SV },
+};
+
+const MC = [
+  {id:1,w:0.22,label:"Compensation",q:"Does the total package meet your floor?",d:"Floor: 105k SEK/month + 10-15% bonus.",s:"1=well below, 10=exceeds"},
+  {id:2,w:0.18,label:"Values Alignment",q:"Does the culture and ethics feel right?",d:"How they treat people and make decisions.",s:"1=conflict, 10=strong alignment"},
+  {id:3,w:0.15,label:"Content",q:"Will the work engage you?",d:"Meaningful and interesting, not just manageable.",s:"1=uninspiring, 10=motivating"},
+  {id:4,w:0.12,label:"Remote/Flexibility",q:"How much flexibility?",d:"Remote vs hybrid vs office, travel, location.",s:"1=on-site, 10=fully remote"},
+  {id:5,w:0.10,label:"Role Level",q:"Step up, lateral, or step down?",d:"Title, scope, team size vs current role.",s:"1=step down, 10=step up"},
+  {id:6,w:0.08,label:"Stability",q:"How financially sound?",d:"Funding, ownership, market position.",s:"1=high risk, 10=very stable"},
+  {id:7,w:0.08,label:"Company Brand",q:"How well-regarded?",d:"Name recognition and reputation.",s:"1=unknown, 10=strong brand"},
+  {id:8,w:0.05,label:"Sector/Product",q:"Connection to what they do?",d:"Industry or mission you can get behind.",s:"1=no connection, 10=strong pride"},
+  {id:9,w:0.02,label:"Growth Potential",q:"Any realistic path upward?",d:"Flags if the role is a dead end.",s:"1=ceiling, 10=clear upward path"},
+];
+
+function xJSON(raw) {
+  if (!raw) throw new Error("Empty response from API");
+  const a = raw.indexOf("{");
+  const b = raw.lastIndexOf("}");
+  if (a === -1 || b === -1 || b <= a) throw new Error("No JSON found. Got: " + raw.slice(0,120));
+  try { return JSON.parse(raw.slice(a, b+1)); }
+  catch(e) { throw new Error("JSON parse failed: " + e.message); }
+}
+
+function Dots() {
+  return React.createElement("span", {style:{display:"inline-flex",gap:4,alignItems:"center",marginLeft:6}},
+    [0,1,2].map(i => React.createElement("span", {key:i, style:{width:5,height:5,borderRadius:"50%",background:C.mint,display:"inline-block",animation:`wd 1.2s ${i*0.2}s ease-in-out infinite`}})),
+    React.createElement("style", null, "@keyframes wd{0%,80%,100%{opacity:.2}40%{opacity:1}}")
+  );
+}
+
+function Tag({col,children}) {
+  return <span style={{display:"inline-block",background:`${col}22`,color:col,border:`1px solid ${col}44`,borderRadius:6,padding:"2px 9px",fontSize:11,fontWeight:600,margin:"2px 2px 0"}}>{children}</span>;
+}
+
+function Bar({pct,col}) {
+  return <div style={{height:5,borderRadius:3,background:C.border}}><div style={{height:"100%",width:`${Math.min(pct,100)}%`,background:col,borderRadius:3,transition:"width .5s"}}/></div>;
+}
+
+function Chk({checked,onClick,label}) {
+  return <div onClick={onClick} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}}>
+    <div style={{width:20,height:20,borderRadius:6,border:`2px solid ${checked?C.mint:C.border}`,background:checked?C.mint:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all .15s"}}>
+      {checked&&<span style={{color:"#1A1A1A",fontSize:11,fontWeight:900,lineHeight:1}}>✓</span>}
+    </div>
+    <span style={{fontSize:14,fontWeight:600,color:checked?C.text:C.muted,fontFamily:F}}>{label}</span>
+  </div>;
+}
+
+function CopyBtn({text}) {
+  const [ok,setOk]=useState(false);
+  return <button onClick={()=>{navigator.clipboard.writeText(text);setOk(true);setTimeout(()=>setOk(false),2000);}}
+    style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,borderRadius:7,padding:"4px 11px",fontSize:12,fontFamily:F,cursor:"pointer",whiteSpace:"nowrap"}}>
+    {ok?"Copied":"Copy"}
+  </button>;
+}
+
+function App() {
+  const [user,setUser]=useState("erkki");
+  const [ad,setAd]=useState("");
+  const [rep,setRep]=useState(null);
+  const [repAfter,setRepAfter]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [err,setErr]=useState("");
+  const [showMx,setShowMx]=useState(false);
+  const [scores,setScores]=useState({});
+  const [mxRes,setMxRes]=useState(null);
+  const [enOn,setEnOn]=useState(false);
+  const [svOn,setSvOn]=useState(false);
+  const [lErr,setLErr]=useState(false);
+  const [gen,setGen]=useState(false);
+  const [genStep,setGenStep]=useState("");
+  const [reanalysing,setReanalysing]=useState(false);
+  const [out,setOut]=useState(null);
+  const [gErr,setGErr]=useState("");
+  const ref=useRef(null);
+  const ud=USERS[user];
+  const isR=user==="robin";
+
+  function clean(s) {
+    if(!s) return "";
+    return s.split("").map(c => c.charCodeAt(0) > 127 ? " " : c).join("");
+  }
+
+  async function api(messages, max=1200, system="") {
+    const safeMessages = messages.map(m=>({...m, content: clean(m.content)}));
+    const payload = {model:"claude-sonnet-4-6", max_tokens:max, messages:safeMessages};
+    if(system) payload.system = clean(system);
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error.message || "API error");
+    const b = (d.content||[]).find(x=>x.type==="text");
+    if(!b?.text) throw new Error("No text in response");
+    return b.text;
+  }
+
+  async function runAnalysis(cvText) {
+    const systemPrompt = `You are a rigorous ATS and executive recruiter analyst. You have the candidate CV below. When given a job ad, score the CV against it with precision.
+
+SCORING RULES:
+- Scores must genuinely reflect the actual match. Do not default to middle values.
+- Strong match: overallScore 80-95. Partial match: 56-79. Weak match: 30-55.
+- Use the full scoring range.
+- keywordMatch: identify exact and semantic keyword matches. For each missing keyword, specify where to add it: "summary", "skills", or "experience".
+- titleAlignment: compare exact job title and seniority requirements to candidate level.
+- experienceAlignment: compare required years, industry, scope, responsibilities to CV evidence.
+- hardSkills: compare technical skills, tools, certifications required vs present in CV.
+- verdict: strong if overallScore>=80, weak if <56, partial otherwise.
+- roleDescriptionFlag: if a CV role undersells a directly relevant skill, name it. Otherwise null.
+
+CANDIDATE CV:
+${cvText}`;
+
+    const raw = await api([{role:"user",content:`Analyse my CV against this job ad. Reply with ONLY a raw JSON object. No markdown. No explanation. Start with { end with }.
+
+JOB AD:
+${ad}
+
+Required JSON structure:
+{"company":"EXACT company name from job ad","role":"EXACT job title from job ad","overallScore":0,"verdict":"weak","summary":"Specific 2-3 sentence honest assessment","keywordMatch":{"score":0,"present":["keyword1"],"missing":[{"keyword":"keyword2","addTo":"summary"}]},"titleAlignment":{"score":0,"note":"one sentence"},"experienceAlignment":{"score":0,"note":"one sentence"},"hardSkills":{"score":0,"present":["skill1"],"missing":["skill2"]},"roleDescriptionFlag":null}`}], 1500, systemPrompt);
+    return xJSON(raw);
+  }
+
+  async function analyse() {
+    if(!ad.trim()) return;
+    setLoading(true);setRep(null);setRepAfter(null);setErr("");setOut(null);setMxRes(null);setScores({});setShowMx(false);
+    try {
+      setRep(await runAnalysis(ud.cv));
+    } catch(e) { setErr(e.message); }
+    setLoading(false);
+  }
+
+  function calcMx() {
+    const scored = MC.filter(c => scores[c.id] && scores[c.id] !== "?");
+    const totalW = scored.reduce((s,c)=>s+c.w, 0);
+    let t = 0;
+    scored.forEach(c => { t += scores[c.id] * (c.w / (totalW||1)); });
+    const thresh = 6.5;
+    const gap = (t - thresh).toFixed(1);
+    setMxRes({score:t.toFixed(1),go:t>=thresh,thresh,gap,skipped:MC.length-scored.length});
+  }
+
+  async function generate() {
+    if(!enOn&&!svOn){setLErr(true);return;}
+    setLErr(false);setGen(true);setOut(null);setGErr("");setGenStep("");setRepAfter(null);
+    const co=rep?.company||"the company",ro=rep?.role||"the role";
+    const nm=isR?"Robin":"Erkki";
+    const res={};
+    let updatedCV = ud.cv;
+    try {
+      if(enOn&&!isR) {
+        setGenStep("EN CV summary (1/2)...");
+        res.sumEN = await api([{role:"user",content:`Rewrite the CV summary for the role ${ro} at ${co}. Mirror the job ad language. Output the rewritten summary text only - no heading, no label, no preamble.\n\nJOB AD:\n${ad}`}], 600,
+          `You are an expert executive CV writer. The candidate CV is below. Rewrite only the summary section to match the target role. Do not invent experience. Use keywords from the job ad naturally.\n\n${ud.cv}`);
+        res.fCVen=`Erkki Alvenmod CV (2026-EN) - ${co} - ${ro}.docx`;
+        // update CV text with new summary for re-analysis
+        updatedCV = ud.cv.replace(/SUMMARY\n[\s\S]*?\n\nEXPERIENCE/, `SUMMARY\n${res.sumEN}\n\nEXPERIENCE`);
+        setGenStep("EN cover letter (2/2)...");
+        res.clEN = await api([{role:"user",content:`Rewrite the cover letter for the role ${ro} at ${co}. Mirror the job ad language and priorities. Output the letter body only from greeting to sign-off. 4 paragraphs max.\n\nJOB AD:\n${ad}`}], 800,
+          `You are an expert executive cover letter writer. The original cover letter is below. Rewrite it to match the target role. Keep the same professional tone and structure. Do not invent experience.\n\nORIGINAL COVER LETTER:\n${ud.enCL}`);
+        res.fCLen=`Erkki Alvenmod Cover Letter (2026-EN) - ${co} - ${ro}.docx`;
+      }
+      if(svOn) {
+        setGenStep("SV sammanfattning...");
+        res.sumSV = await api([{role:"user",content:`Skriv om ${isR?"profilsektionen":"sammanfattningen"} for rollen ${ro} pa ${co}. Spegla jobbannonsens sprak. Bara texten, ingen rubrik.\n\nJOBBANNONS:\n${ad}`}], 600,
+          `Du ar en expert pa CV-skrivning. Kandidatens CV finns nedan. Skriv om enbart ${isR?"profilsektionen":"sammanfattningen"} for att matcha den aktuella rollen. Hitta inte pa erfarenheter.\n\n${ud.svCV||ud.cv}`);
+        res.fCVsv=`${nm} Alvenmod CV (2026-SV) - ${co} - ${ro}.docx`;
+        if(!enOn) updatedCV = ud.cv.replace(/SUMMARY\n[\s\S]*?\n\nEXPERIENCE/, `SUMMARY\n${res.sumSV}\n\nEXPERIENCE`);
+        setGenStep("SV personligt brev...");
+        res.clSV = await api([{role:"user",content:`Skriv om personliga brevet for rollen ${ro} pa ${co}. Spegla jobbannonsens sprak och prioriteringar. Bara brevtexten fran halsning till avslutning. Max 4 stycken.\n\nJOBBANNONS:\n${ad}`}], 800,
+          `Du ar en expert pa personliga brev. Originalbrevet finns nedan. Skriv om det for att matcha den aktuella rollen. Behall professionell ton och struktur. Hitta inte pa erfarenheter.\n\nORIGINALBREV:\n${ud.svCL}`);
+        res.fCLsv=`${nm} Alvenmod Personligt Brev (2026-SE) - ${co} - ${ro}.docx`;
+      }
+      setOut(res);
+      setGenStep("");
+      setGen(false);
+      setTimeout(()=>ref.current?.scrollIntoView({behavior:"smooth"}),200);
+      // Re-analysis with updated CV
+      setReanalysing(true);
+      try {
+        const after = await runAnalysis(updatedCV);
+        setRepAfter(after);
+      } catch(e) { /* silent - re-analysis is bonus */ }
+      setReanalysing(false);
+    } catch(e) { setGErr(e.message); setGen(false); setGenStep(""); }
+  }
+
+  function reset(k) {
+    setUser(k);setRep(null);setRepAfter(null);setOut(null);setMxRes(null);setScores({});
+    setShowMx(false);setAd("");setErr("");setGErr("");setGenStep("");setEnOn(false);setSvOn(k==="robin");
+  }
+
+  const vc=rep?.verdict==="strong"?C.mint:rep?.verdict==="partial"?C.warn:C.danger;
+  const allS=MC.every(c=>scores[c.id]!==undefined && scores[c.id]!==null && scores[c.id]!=="");
+  const bx={background:C.card,borderRadius:14,border:`1px solid ${C.border}`,padding:"18px 20px"};
+  const sc={margin:"16px 16px 0"};
+  const tl={fontSize:10,fontWeight:700,letterSpacing:"0.09em",color:C.muted,textTransform:"uppercase",marginBottom:10,fontFamily:F};
+  const ta={width:"100%",background:C.input,border:`1.5px solid ${C.border}`,borderRadius:10,color:C.text,fontFamily:F,fontSize:14,padding:"11px 13px",outline:"none",boxSizing:"border-box",resize:"vertical",minHeight:120,lineHeight:1.6};
+  const b=(bg,fg="#1A1A1A",full)=>({background:bg,color:fg,border:"none",borderRadius:10,padding:"10px 18px",fontFamily:F,fontSize:13,fontWeight:700,cursor:"pointer",width:full?"100%":"auto"});
+  const bo=col=>({background:"transparent",color:col,border:`1.5px solid ${col}`,borderRadius:10,padding:"9px 18px",fontFamily:F,fontSize:13,fontWeight:600,cursor:"pointer"});
+  const dv={height:1,background:C.border,margin:"14px 0"};
+  const eb={fontSize:12,color:C.danger,padding:"9px 13px",background:`${C.danger}11`,borderRadius:8,border:`1px solid ${C.danger}33`,wordBreak:"break-word",fontFamily:F,marginTop:10};
+
+  return (
+    <div style={{fontFamily:F,background:C.bg,minHeight:"100vh",color:C.text,paddingBottom:60}}>
+      <div style={{background:C.card,borderBottom:`1px solid ${C.border}`,padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
+        <div>
+          <div style={{fontSize:15,fontWeight:700,color:C.mint}}>⬡ Wayfinder Match</div>
+          <div style={{fontSize:11,color:C.muted,marginTop:1}}>Job Analysis & Document Generator</div>
+        </div>
+        <div style={{display:"flex",gap:7}}>
+          {Object.entries(USERS).map(([k,v])=>(
+            <button key={k} onClick={()=>reset(k)}
+              style={{padding:"5px 14px",borderRadius:20,border:`1.5px solid ${user===k?C.mint:C.border}`,background:user===k?`${C.mint}18`:"transparent",color:user===k?C.mint:C.muted,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:F}}>
+              {v.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={sc}>
+        <div style={bx}>
+          <div style={tl}>Step 1 — Job Ad</div>
+          <textarea value={ad} onChange={e=>setAd(e.target.value)} placeholder="Paste the full job ad here..." style={ta}/>
+          <div style={{marginTop:10,display:"flex",justifyContent:"flex-end"}}>
+            <button onClick={analyse} disabled={!ad.trim()||loading}
+              style={b(!ad.trim()||loading?"#3A3A3A":C.mint,!ad.trim()||loading?C.muted:"#1A1A1A")}>
+              {loading?<span>Analysing<Dots/></span>:"Analyse CV Match →"}
+            </button>
+          </div>
+          {err&&<div style={eb}>{err}</div>}
+        </div>
+      </div>
+
+      {rep&&(
+        <div style={sc}>
+          <div style={bx}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={tl}>Step 2 — CV Match Report</div>
+                <div style={{fontSize:16,fontWeight:700}}>{rep.role}</div>
+                <div style={{fontSize:13,color:C.muted,marginTop:1}}>{rep.company}</div>
+              </div>
+              <div style={{textAlign:"right",flexShrink:0,marginLeft:14}}>
+                <div style={{fontSize:38,fontWeight:800,color:vc,letterSpacing:"-2px",lineHeight:1}}>{rep.overallScore}%</div>
+                <div style={{marginTop:4}}><Tag col={vc}>{(rep.verdict||"").toUpperCase()}</Tag></div>
+              </div>
+            </div>
+            <div style={{fontSize:13,lineHeight:1.65,padding:"11px 13px",background:C.input,borderRadius:10,marginBottom:14}}>{rep.summary}</div>
+            {[{l:"Keyword Match",d:rep.keywordMatch},{l:"Title & Seniority",d:rep.titleAlignment},{l:"Experience Alignment",d:rep.experienceAlignment},{l:"Hard Skills",d:rep.hardSkills}].map(({l,d})=>{
+              if(!d) return null;
+              const col=d.score>=75?C.mint:d.score>=55?C.warn:C.danger;
+              return <div key={l} style={{marginBottom:11}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                  <span style={{fontSize:12,fontWeight:600}}>{l}</span>
+                  <span style={{fontSize:12,fontWeight:700,color:col}}>{d.score}%</span>
+                </div>
+                <Bar pct={d.score} col={col}/>
+                {d.note&&<div style={{fontSize:11,color:C.muted,marginTop:3}}>{d.note}</div>}
+              </div>;
+            })}
+            <div style={dv}/>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+              <div>
+                <div style={{fontSize:10,fontWeight:700,color:C.mint,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.06em"}}>Present</div>
+                <div style={{display:"flex",flexWrap:"wrap"}}>{(rep.keywordMatch?.present||[]).map(k=><Tag key={k} col={C.mint}>{k}</Tag>)}</div>
+              </div>
+              <div>
+                <div style={{fontSize:10,fontWeight:700,color:C.danger,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.06em"}}>Missing</div>
+                <div style={{display:"flex",flexWrap:"wrap"}}>
+                  {(rep.keywordMatch?.missing||[]).map((k,i)=>{
+                    const kw=typeof k==="object"?k.keyword:k;
+                    const where=typeof k==="object"?k.addTo:null;
+                    return <span key={i} style={{display:"inline-flex",alignItems:"center",gap:4,margin:"2px 2px 0"}}>
+                      <Tag col={C.danger}>{kw}</Tag>
+                      {where&&<span style={{fontSize:10,color:C.muted,fontStyle:"italic"}}>→ {where}</span>}
+                    </span>;
+                  })}
+                </div>
+              </div>
+            </div>
+            {(rep.hardSkills?.missing||[]).length>0&&<>
+              <div style={dv}/>
+              <div style={{fontSize:10,fontWeight:700,color:C.warn,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.06em"}}>Missing Hard Skills</div>
+              <div style={{display:"flex",flexWrap:"wrap"}}>{rep.hardSkills.missing.map(k=><Tag key={k} col={C.warn}>{k}</Tag>)}</div>
+            </>}
+            {rep.roleDescriptionFlag&&<><div style={dv}/>
+              <div style={{fontSize:12,color:C.warn,padding:"9px 13px",background:`${C.warn}11`,borderRadius:8,border:`1px solid ${C.warn}33`}}><strong>Note:</strong> {rep.roleDescriptionFlag}</div>
+            </>}
+          </div>
+        </div>
+      )}
+
+      {rep&&!isR&&(
+        <div style={sc}>
+          <div style={bx}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div>
+                <div style={tl}>Step 3 — Decision Matrix</div>
+                <div style={{fontSize:13,color:C.muted}}>Optional</div>
+              </div>
+              {!showMx&&<button onClick={()=>setShowMx(true)} style={bo(C.purple)}>Run Matrix →</button>}
+            </div>
+            {showMx&&<div style={{marginTop:14}}>
+              {MC.map(c=>(
+                <div key={c.id} style={{marginBottom:10,padding:13,background:C.input,borderRadius:10,border:`1px solid ${C.border}`}}>
+                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}>
+                    <span style={{fontSize:12,fontWeight:700}}>{c.label}</span>
+                    <span style={{fontSize:11,color:C.muted}}>Weight: {Math.round(c.w*100)}%</span>
+                  </div>
+                  <div style={{fontSize:12,marginBottom:2}}>{c.q}</div>
+                  <div style={{fontSize:11,color:C.muted,marginBottom:2}}>{c.d}</div>
+                  <div style={{fontSize:10,color:C.muted,fontStyle:"italic",marginBottom:7}}>{c.s}</div>
+                  <div style={{display:"flex",gap:4,flexWrap:"wrap",alignItems:"center"}}>
+                    {[1,2,3,4,5,6,7,8,9,10].map(n=>(
+                      <button key={n} onClick={()=>setScores(p=>({...p,[c.id]:n}))}
+                        style={{width:32,height:32,borderRadius:7,border:`1.5px solid ${scores[c.id]===n?C.purple:C.border}`,background:scores[c.id]===n?C.purple:"transparent",color:scores[c.id]===n?C.text:C.muted,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer"}}>
+                        {n}
+                      </button>
+                    ))}
+                    <button onClick={()=>setScores(p=>({...p,[c.id]:"?"}))}
+                      style={{height:32,padding:"0 10px",borderRadius:7,border:`1.5px solid ${scores[c.id]==="?"?C.warn:C.border}`,background:scores[c.id]==="?"?`${C.warn}22`:"transparent",color:scores[c.id]==="?"?C.warn:C.muted,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer",marginLeft:4}}>
+                      ?
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {allS&&!mxRes&&<button onClick={calcMx} style={{...b(C.purple,C.text),width:"100%",marginTop:4}}>Calculate Result →</button>}
+              {mxRes&&<div style={{padding:18,background:C.input,borderRadius:12,border:`1.5px solid ${mxRes.go?C.mint:C.danger}44`,textAlign:"center",marginTop:8}}>
+                <div style={{fontSize:40,fontWeight:800,color:mxRes.go?C.mint:C.danger,letterSpacing:"-2px",lineHeight:1}}>{mxRes.score}<span style={{fontSize:17}}>/10</span></div>
+                <div style={{fontSize:12,color:C.muted,marginTop:3}}>Threshold: {mxRes.thresh}/10 — you are <span style={{color:mxRes.go?C.mint:C.danger,fontWeight:700}}>{mxRes.gap>0?"+":""}{mxRes.gap}</span> {mxRes.go?"above":"below"}</div>
+                {mxRes.skipped>0&&<div style={{fontSize:11,color:C.warn,marginTop:3}}>{mxRes.skipped} criterion skipped (Don't know) — weight redistributed</div>}
+                <div style={{fontSize:17,fontWeight:800,color:mxRes.go?C.mint:C.danger,marginTop:10}}>{mxRes.go?"Proceed":"Pass"}</div>
+                <div style={{fontSize:12,color:C.muted,marginTop:3,marginBottom:12}}>{mxRes.go?"Score above threshold — worth pursuing.":"Score below threshold — consider carefully."}</div>
+                <button onClick={()=>setMxRes(null)} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,borderRadius:8,padding:"6px 16px",fontFamily:F,fontSize:12,cursor:"pointer"}}>Edit scores</button>
+              </div>}
+            </div>}
+          </div>
+        </div>
+      )}
+
+      {rep&&(
+        <div style={sc}>
+          <div style={bx}>
+            <div style={tl}>{isR?"Step 3":"Step 4"} — Language & Generate</div>
+            <div style={{display:"flex",gap:18,marginBottom:12,flexWrap:"wrap"}}>
+              {!isR&&<Chk checked={enOn} onClick={()=>{setEnOn(!enOn);setLErr(false);}} label="English"/>}
+              <Chk checked={svOn} onClick={()=>{setSvOn(!svOn);setLErr(false);}} label="Swedish"/>
+            </div>
+            {lErr&&<div style={{fontSize:12,color:C.danger,marginBottom:10}}>Please select at least one language.</div>}
+            {(enOn||svOn)&&<div style={{fontSize:12,color:C.muted,marginBottom:12,padding:"8px 12px",background:C.input,borderRadius:8}}>
+              Will generate: {[enOn&&!isR&&"EN summary + EN cover letter",svOn&&"SV summary + Personligt Brev"].filter(Boolean).join(" + ")}
+            </div>}
+            <button onClick={generate} disabled={gen} style={b(gen?"#3A3A3A":C.mint,gen?C.muted:"#1A1A1A",true)}>
+              {gen?<span>Generating {genStep}<Dots/></span>:"Generate Tailored Documents →"}
+            </button>
+            {gErr&&<div style={eb}>{gErr}</div>}
+          </div>
+        </div>
+      )}
+
+      {out&&(
+        <div style={sc} ref={ref}>
+          <div style={bx}>
+            <div style={tl}>Output — Paste-Ready Text</div>
+            <div style={{fontSize:12,color:C.muted,marginBottom:14}}>Open Word file → replace section → save with filename shown.</div>
+            {[
+              out.sumEN&&{label:"English — CV Summary",fn:out.fCVen,text:out.sumEN},
+              out.clEN&&{label:"English — Cover Letter",fn:out.fCLen,text:out.clEN},
+              out.sumSV&&{label:isR?"Swedish — Profil":"Swedish — CV Sammanfattning",fn:out.fCVsv,text:out.sumSV},
+              out.clSV&&{label:"Swedish — Personligt Brev",fn:out.fCLsv,text:out.clSV},
+            ].filter(Boolean).map((item,i)=>(
+              <div key={i} style={{marginBottom:18}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:7}}>
+                  <div>
+                    <div style={{fontSize:12,fontWeight:700,color:C.mint}}>{item.label}</div>
+                    <div style={{fontSize:10,color:C.muted,marginTop:2}}>Save as: {item.fn}</div>
+                  </div>
+                  <CopyBtn text={item.text}/>
+                </div>
+                <div style={{background:C.input,border:`1px solid ${C.border}`,borderRadius:10,padding:"12px 14px",fontSize:12,lineHeight:1.7,color:C.text,whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{item.text}</div>
+              </div>
+            ))}
+
+            {(reanalysing||repAfter)&&<>
+              <div style={dv}/>
+              <div style={tl}>Re-Analysis — After Tailoring</div>
+              {reanalysing&&!repAfter&&<div style={{fontSize:12,color:C.muted,display:"flex",alignItems:"center",gap:6}}>Running re-analysis<Dots/></div>}
+              {repAfter&&(()=>{
+                const scoreBefore = rep.overallScore;
+                const scoreAfter = repAfter.overallScore;
+                const delta = scoreAfter - scoreBefore;
+                const col = scoreAfter>=80?C.mint:scoreAfter>=56?C.warn:C.danger;
+                return <div style={{padding:14,background:C.input,borderRadius:10,border:`1px solid ${C.border}`}}>
+                  <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:10}}>
+                    <div style={{textAlign:"center"}}>
+                      <div style={{fontSize:11,color:C.muted,marginBottom:2}}>Before</div>
+                      <div style={{fontSize:28,fontWeight:800,color:vc,letterSpacing:"-1px"}}>{scoreBefore}%</div>
+                    </div>
+                    <div style={{fontSize:20,color:C.muted}}>→</div>
+                    <div style={{textAlign:"center"}}>
+                      <div style={{fontSize:11,color:C.muted,marginBottom:2}}>After</div>
+                      <div style={{fontSize:28,fontWeight:800,color:col,letterSpacing:"-1px"}}>{scoreAfter}%</div>
+                    </div>
+                    <div style={{marginLeft:"auto",textAlign:"center"}}>
+                      <div style={{fontSize:22,fontWeight:800,color:delta>=0?C.mint:C.danger}}>{delta>=0?"+":""}{delta}%</div>
+                      <div style={{fontSize:10,color:C.muted}}>change</div>
+                    </div>
+                  </div>
+                  <div style={{fontSize:12,lineHeight:1.6,color:C.muted}}>{repAfter.summary}</div>
+                </div>;
+              })()}
+            </>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App/>);
+</script>
+</body>
+</html>
