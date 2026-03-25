@@ -250,7 +250,7 @@ function App() {
     const safeMessages = messages.map(m=>({...m, content: clean(m.content)}));
     const payload = {model:"claude-sonnet-4-6", max_tokens:max, messages:safeMessages};
     if(system) payload.system = clean(system);
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
+    const r = await fetch("https://patient-recipe-8239.erkki-1ba.workers.dev/", {
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body: JSON.stringify(payload)
